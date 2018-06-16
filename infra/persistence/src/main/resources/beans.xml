@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- dao -->
+	<bean id="dao" class="DaoImpl" autowire="byName"/>
+
+	<!-- service -->
+	<bean id="contactService" class="ContactServiceImpl" autowire="byName"/>
+	<bean id="roleService" class="RoleServiceImpl" autowire="byName"/>
+	<bean id="personnelService" class="PersonnelServiceImpl" autowire="byName"/>
+	<bean id="projectService" class="ProjectServiceImpl" autowire="byName"/>
+
+	<!-- transaction -->
+
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="serviceMethods"
+			expression="target(Dao)" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" />
+	</aop:config>
+
+	<!-- hibernate config -->
+
+	<bean id = "dataSource" class = "org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name = "driverClassName" value = "org.postgresql.Driver"/>
+		<property name = "url" value = "jdbc:postgresql://localhost:5432/personneldb"/>
+		<property name = "username" value = "postgres"/>
+		<property name = "password" value = "ex1stgl0bal"/>
+	</bean>
+
+	<bean id = "sessionFactory" class = "org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name = "dataSource" ref = "dataSource"/>
+		<property name = "hibernateProperties">
+			<props>
+				<prop key = "hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key = "hibernate.show_sql">false</prop>
+				<prop key = "hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+				<prop key = "hibernate.cache.use_second_level_cache">true</prop>
+				<prop key = "hibernate.cache.use_query_cache">true</prop>
+			</props>
+		</property>
+
+		<property name = "annotatedClasses">
+			<list>
+				<value>Personnel</value>
+				<value>Roles</value>
+				<value>Contact</value>
+				<value>Project</value>
+			</list>
+		</property>
+	</bean>
+
+  	<!-- view resolver -->
+    <bean id = "viewResolver" class = "org.springframework.web.servlet.view.InternalResourceViewResolver" autowire="byName">
+        <property name = "prefix" value = "WEB-INF/views/"/>
+        <property name = "suffix" value = ".jsp"/>
+	</bean>
+
+	<!-- controllers -->
+	<bean class = "org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+	<bean name = "/" class = "IndexController" autowire = "byName" /> 
+	<bean name = "/listPersonnel" class = "PersonnelController" autowire = "byName"/>
+	<bean name = "/deletePersonnel" class = "PersonnelController" autowire = "byName"/>
+	<bean name = "/addPersonnelByFile" class = "PersonnelController" autowire = "byName"/>
+	<bean name = "/listRoles" class = "RoleController" autowire = "byName"/>
+	<bean name = "/manageRoles" class = "RoleController" autowire = "byName"/>
+	<bean name = "/deleteRole" class = "RoleController" autowire = "byName"/>
+	<bean name = "/addPersonnel" class = "AddPersonnelController" autowire = "byName">
+		<property name="commandName" value="personnel" />
+    	<property name="commandClass" value="Personnel" />
+    	<property name="formView" value="personnelForm"/>
+		<property name="validator" ref="personnelValidator"/>
+	</bean>
+	<bean name = "/updatePersonnel" class = "UpdatePersonnelController" autowire = "byName">
+		<property name="commandName" value="personnel" />
+    	<property name="commandClass" value="Personnel" />
+    	<property name="formView" value="personnelForm"/>
+		<property name="validator" ref="personnelValidator"/>
+	</bean>
+	<bean name = "/addRole" class = "AddRoleController" autowire = "byName">
+		<property name="commandName" value="roles" />
+    	<property name="commandClass" value="Roles" />
+    	<property name="formView" value="roleIndex"/>
+		<property name="validator" ref="roleValidator"/>
+	</bean>
+
+	<bean name = "/updateRole" class = "UpdateRoleController" autowire = "byName">
+		<property name="commandName" value="roles" />
+    	<property name="commandClass" value="Roles" />
+    	<property name="formView" value="updateRoleForm"/>
+		<property name="validator" ref="roleValidator"/>
+	</bean>
+
+	<bean name = "/listProject" class = "ProjectController" autowire = "byName"/>
+	<bean name = "/deleteProject" class = "ProjectController" autowire = "byName"/>
+	<bean name = "/addProject" class = "AddProjectController" autowire = "byName">
+		<property name="commandName" value="project" />
+    	<property name="commandClass" value="Project" />
+    	<property name="formView" value="projectForm"/>
+		<property name="validator" ref="projectValidator"/>
+	</bean>
+	<bean name = "/updateProject" class = "UpdateProjectController" autowire = "byName">
+		<property name="commandName" value="project" />
+    	<property name="commandClass" value="Project" />
+    	<property name="formView" value="projectForm"/>
+		<property name="validator" ref="projectValidator"/>
+	</bean>
+
+	<bean name = "/personnelManager" class = "PersonnelManager" autowire = "byName">
+		<property name="commandName" value="fileUpload" />
+    	<property name="commandClass" value="FileUpload" />
+    </bean>
+	
+	<bean id = "personnelValidator" class = "PersonnelValidator" autowire = "byName"/>
+	<bean id = "roleValidator" class = "RoleValidator" autowire = "byName" />
+	<bean id = "projectValidator" class = "ProjectValidator" autowire = "byName" />
+
+	<!-- LOCALE CHANGER -->
+	<bean id = "messageSource" class = "org.springframework.context.support.ResourceBundleMessageSource">
+		<property name = "basename" value = "messages"/>
+	</bean>
+	
+	<mvc:interceptors>
+		<bean id = "localeChangeInterceptor" class = "org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name = "paramName" value = "lang"/>
+		</bean>
+	</mvc:interceptors>
+
+	<bean id = "localeResolver" class = "org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name = "defaultLocale" value = "en"/>
+	</bean>
+
+	<bean id = "multipartResolver" class = "org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+</beans>

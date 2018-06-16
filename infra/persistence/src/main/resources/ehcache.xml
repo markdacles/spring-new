@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <defaultCache
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+        <cache name = "Roles"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "Personnel"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "Personnel.roles"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "Roles.personnel"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "Personnel.contact"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "Contact"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "Project"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+     <cache name = "Project.personnel"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+     <cache name = "Personnel.project"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "org.hibernate.cache.internal.StandardQueryCache"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+    <cache name = "org.hibernate.cache.spi.UpdateTimestampsCache"
+    maxElementsInMemory = "100"
+    eternal = "false"
+    timeToIdleSeconds = "30"
+    timeToLiveSeconds = "120"
+    />
+
+</ehcache>
