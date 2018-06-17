@@ -18,7 +18,7 @@
         </div>
         <hr/>
         <br>
-        <form:form method="POST" commandName="personnel">
+        <form:form method="POST" modelAttribute="personnel">
 
             <spring:message code="label.fname"/>:
             <form:input path="name.fname" value = "${personnel.name.fname}"/>
